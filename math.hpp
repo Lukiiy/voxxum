@@ -1,5 +1,15 @@
 #pragma once
 
+#include <cmath>
+
+namespace {
+    const float PI = std::acos(-1.0f);
+    const float DEG2RAD = PI / 180.0f;
+    const float ERRMARGIN = .0001f;
+    const float EPSILION = 1e-6f;
+    const float INF = 1e30f;
+}
+
 struct Vec3 {
     float x = 0.0f;
     float y = 0.0f;
