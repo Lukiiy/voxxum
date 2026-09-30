@@ -11,7 +11,7 @@ enum class BlockType : uint8_t {
     STONE
 };
 
-const int BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::STONE) + 1;
+inline constexpr size_t BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::STONE) + 1;
 
 struct BlockDef {
     std::string id;
