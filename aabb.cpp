@@ -28,6 +28,16 @@ struct Vec3 {
     }
 };
 
+struct Vec3i {
+    int x = 0;
+    int y = 0;
+    int z = 0;
+
+    bool operator== (const Vec3i& o) const {
+        return x == o.x && y == o.y && z == o.z;
+    }
+};
+
 struct AABB {
     Vec3 min;
     Vec3 max;
