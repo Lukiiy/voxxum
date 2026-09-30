@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL_render.h>
-#include "math.hpp"
+#include "mathutils.hpp"
 
 class World;
 class Player;

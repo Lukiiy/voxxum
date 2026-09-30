@@ -2,7 +2,7 @@
 
 #include <SDL3/SDL_scancode.h>
 #include "block.hpp"
-#include "math.hpp"
+#include "mathutils.hpp"
 
 class World;
 

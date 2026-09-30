@@ -1,7 +1,7 @@
 #pragma once
 
 #include "block.hpp"
-#include "math.hpp"
+#include "mathutils.hpp"
 
 class World {
 public:
