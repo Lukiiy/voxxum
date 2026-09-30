@@ -48,3 +48,16 @@ struct AABB {
         return (min.x < o.max.x && max.x > o.min.x) && (min.y < o.max.y && max.y > o.min.y) && (min.z < o.max.z && max.z > o.min.z);
     }
 };
+
+enum class Axis {
+    X,
+    Y,
+    Z
+};
+
+struct RaycastResult {
+    bool hit = false;
+
+    Vec3i blockPos{0, 0, 0};
+    Vec3i placePos{0, 0, 0};
+};
