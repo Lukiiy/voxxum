@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL3/SDL_pixels.h>
 #include <SDL3_image/SDL_image.h>
 #include <string>
