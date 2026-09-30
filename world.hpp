@@ -1,6 +1,7 @@
 #pragma once
 
 #include "block.hpp"
+#include "math.hpp"
 
 class World {
 public:
@@ -27,6 +28,8 @@ public:
     bool isTransparent(int x, int y, int z) const {
         return getBlockDef(getBlock(x, y, z)).isTransparent;
     }
+
+    RaycastResult raycast(Vec3 origin, Vec3 dir, float maxDist) const;
 
 private:
     BlockType blocks[SIZE_X][SIZE_Y][SIZE_Z] {};
