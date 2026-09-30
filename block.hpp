@@ -9,10 +9,11 @@ enum class BlockType : uint8_t {
     AIR,
     GRASS,
     DIRT,
-    STONE
+    STONE,
+    COUNT
 };
 
-inline constexpr size_t BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::STONE) + 1;
+inline constexpr size_t BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::COUNT);
 
 struct BlockDef {
     std::string_view id;
