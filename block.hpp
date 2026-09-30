@@ -2,7 +2,8 @@
 
 #include <SDL3/SDL_pixels.h>
 #include <SDL3_image/SDL_image.h>
-#include <string>
+#include <array>
+#include <string_view>
 
 enum class BlockType : uint8_t {
     AIR,
@@ -14,16 +15,20 @@ enum class BlockType : uint8_t {
 inline constexpr size_t BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::STONE) + 1;
 
 struct BlockDef {
-    std::string id;
+    std::string_view id;
     bool isSolid;
     bool isTransparent;
 
     SDL_FColor base;
 };
 
-const BlockDef BLOCK_REGISTRY[BLOCK_TYPE_COUNT] = {
+inline constexpr std::array<BlockDef, BLOCK_TYPE_COUNT> BLOCK_REGISTRY = {{
     {"air", false, true, {0, 0, 0, 0}},
     {"grass", true, false, {.34f, .73f, .21f, 1.0f}},
     {"dirt", true, false, {.45f, .3f, .18f, 1.0f}},
     {"stone", true, false, {.5f, .5f, .5f, 1.0f}}
-};
+}};
+
+inline constexpr const BlockDef& getBlockDef(BlockType type) {
+    return BLOCK_REGISTRY[static_cast<size_t>(type)];
+}
