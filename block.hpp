@@ -15,6 +15,22 @@ enum class BlockType : uint8_t {
 
 inline constexpr size_t BLOCK_TYPE_COUNT = static_cast<size_t>(BlockType::COUNT);
 
+struct TileCoord {
+    int x = 0;
+    int y = 0;
+};
+
+struct CubeTextures {
+    TileCoord top{};
+    TileCoord side{};
+    TileCoord bottom{};
+
+    constexpr CubeTextures() = default;
+
+    constexpr explicit CubeTextures(TileCoord all) : top(all), side(all), bottom(all) {}
+    constexpr CubeTextures(TileCoord top, TileCoord side, TileCoord bottom) : top(top), side(side), bottom(bottom) {}
+};
+
 struct BlockDef {
     std::string_view id;
     bool isSolid;
