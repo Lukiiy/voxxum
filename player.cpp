@@ -24,12 +24,12 @@ Vec3 Player::getRightVector() const {
     };
 }
 
-AABB Player::getAABB(Vec3 p) const {
+AABB Player::getAABB(Vec3 pos) const {
     float halfW = width / 2.0f;
 
     return AABB{
-        { p.x - halfW, p.y, p.z - halfW },
-        { p.x + halfW, p.y + height, p.z + halfW }
+        { pos.x - halfW, pos.y, pos.z - halfW },
+        { pos.x + halfW, pos.y + height, pos.z + halfW }
     };
 }
 
