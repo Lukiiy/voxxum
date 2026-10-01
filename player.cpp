@@ -39,8 +39,6 @@ void Player::handleMouseLook(float dx, float dy, float sensitivity) {
 }
 
 void Player::updateInputs(const bool* keys, bool jumpPressed) {
-    sprinting = keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_LCTRL];
-
     float rotY = yaw * DEG2RAD;
     Vec3 forward = { std::cos(rotY), 0.0f, std::sin(rotY) };
     Vec3 right = getRightVector();
@@ -57,9 +55,8 @@ void Player::updateInputs(const bool* keys, bool jumpPressed) {
         moveDir.z /= len;
     }
 
-    float speed = sprinting ? SPRINT : WALK;
-    vel.x = moveDir.x * speed;
-    vel.z = moveDir.z * speed;
+    vel.x = moveDir.x * SPEED;
+    vel.z = moveDir.z * SPEED;
 
     if (jumpPressed && grounded) {
         vel.y = JUMP;

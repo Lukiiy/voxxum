@@ -8,8 +8,7 @@ class World;
 
 class Player { // TODO https://minecraft.wiki/w/Player
 public:
-    static constexpr float WALK = 4.317f;
-    static constexpr float SPRINT = 5.612f;
+    static constexpr float SPEED = 4.317f;
     static constexpr float JUMP = 8.42f;
     static constexpr float GRAVITY = 28.0f;
 
@@ -22,7 +21,6 @@ public:
     float height = 1.8f;
     float eyeHeight = 1.62f;
     bool grounded = false;
-    bool sprinting = false;
 
     BlockType selected = BlockType::GRASS;
 
