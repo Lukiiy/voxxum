@@ -30,7 +30,7 @@ public:
 
     Vec3 getForwardVector() const;
     Vec3 getRightVector() const;
-    AABB getAABB(Vec3 p) const;
+    AABB getAABB(Vec3 pos) const;
 
     void handleMouseLook(float dx, float dy, float sensitivity = .15f);
     void updateInputs(const bool* keys, bool jumpPressed);
