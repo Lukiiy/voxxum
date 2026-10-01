@@ -2,99 +2,75 @@ name: Build
 
 on:
   push:
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build (${{ matrix.os_name }}-${{ matrix.arch }})
-    runs-on: ${{ matrix.runner }}
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os_name: linux
-            arch: x86_64
-            runner: ubuntu-latest
-            artifact_name: linux-x86_64
+          - name: linux
+            os: ubuntu-latest
+            cmake_args: ''
+            built: 'build/voxxum'
+            artifact_name: 'voxxum-linux'
 
-          - os_name: linux
-            arch: arm64
-            runner: ubuntu-latest
-            artifact_name: linux-arm64
+          - name: linux (ARM)
+            os: ubuntu-24.04-arm
+            cmake_args: ''
+            built: 'build/voxxum'
+            artifact_name: 'voxxum-linux-arm'
 
-          - os_name: windows
-            arch: x64
-            runner: windows-latest
-            artifact_name: windows-x64.exe
+          - name: windows
+            os: windows-latest
+            cmake_args: '-A x64'
+            built: 'build/Release/voxxum.exe'
+            artifact_name: 'voxxum-windows.exe'
 
-          - os_name: windows
-            arch: arm64
-            runner: windows-latest
-            artifact_name: windows-arm64.exe
+          - name: windows (arm)
+            os: windows-latest
+            cmake_args: '-A ARM64'
+            built: 'build/Release/voxxum.exe'
+            artifact_name: 'voxxum-windows-arm.exe'
 
-          - os_name: macos
-            arch: x86_64
-            runner: macos-13
-            deployment_target: '10.13'
-            artifact_name: macos-x86_64
+          - name: mac (arm)
+            os: macos-14
+            cmake_args: '-DCMAKE_OSX_ARCHITECTURES=arm64'
+            built: 'build/voxxum'
+            artifact_name: 'voxxum-macos'
 
-          - os_name: macos
-            arch: arm64
-            runner: macos-14
-            deployment_target: '11.0'
-            artifact_name: macos-arm64
+          - name: mac
+            os: macos-14
+            cmake_args: '-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13'
+            built: 'build/voxxum'
+            artifact_name: 'voxxum-macos-x64'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
 
-      - name: Install tools
-        if: matrix.os_name == 'linux' && matrix.arch == 'arm64'
+      - name: Install tool
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-
-      - name: Build Linux (cisc)
-        if: matrix.os_name == 'linux' && matrix.arch == 'x86_64'
-        run: |
-          mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          make -j$(nproc)
-          cp binary ../${{ matrix.artifact_name }}
-
-      - name: Build Linux (risc)
-        if: matrix.os_name == 'linux' && matrix.arch == 'arm64'
-        run: |
-          mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++
-          make -j$(nproc)
-          cp binary ../${{ matrix.artifact_name }}
-
-      - name: Setup dev cmd
-        if: matrix.os_name == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1
+          sudo apt-get install -y libwayland-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev libgl1-mesa-dev libdbus-1-dev
+      - name: cmake
+        uses: jwlawson/actions-setup-cmake@v2.2.0
         with:
-          arch: ${{ matrix.arch }}
+          cmake-version: '4.4.x'
 
-      - name: Build Windows (${{ matrix.arch }})
-        if: matrix.os_name == 'windows'
-        shell: cmd
-        run: |
-          mkdir build
-          cd build
-          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded" ..
-          nmake
-          copy binary.exe ..\${{ matrix.artifact_name }}
+      - name: config cmake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
 
-      - name: Build macOS (${{ matrix.arch }})
-        if: matrix.os_name == 'macos'
-        env:
-          MACOSX_DEPLOYMENT_TARGET: ${{ matrix.deployment_target }}
-        run: |
-          mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="${{ matrix.arch }}"
-          make -j$(sysctl -n hw.ncpu)
-          cp binary ../${{ matrix.artifact_name }}
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - shell: bash
+        run: mv ${{ matrix.built }} ${{ matrix.artifact_name }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
