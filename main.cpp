@@ -34,12 +34,15 @@ AABB blockAABB(Vec3i pos) {
 
 int main(int argc, char* argv[]) {
     const char* backend = "vulkan"; // preferred
+    bool vsync = true;
 
     for (int i = 1; i < argc; ++i) {
         std::string_view arg = argv[i];
 
         if (arg == "--v") backend = "vulkan";
         else if (arg == "--o") backend = "opengl";
+        else if (arg == "--m") backend = "metal";
+        else if (arg == "--novsync") vsync = false;
     }
 
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, backend);
@@ -59,7 +62,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SDL_SetRenderVSync(renderer, 1);
+    SDL_SetRenderVSync(renderer, vsync ? 1 : 0);
     SDL_SetWindowRelativeMouseMode(window, true);
 
     const char* driver = SDL_GetRendererName(renderer);
