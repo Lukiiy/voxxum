@@ -1,8 +1,11 @@
+#include "renderer.hpp"
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_timer.h>
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstring>
+#include <string_view>
 #include <vector>
 #include "block.hpp"
 #include "mathutils.hpp"
@@ -10,8 +13,9 @@
 #include "world.hpp"
 
 namespace {
-    constexpr float NEAR_Z = 0.05f;
+    constexpr float NEAR_Z = .05f;
     constexpr float FOV_DEG = 70.0f;
+    constexpr float CROSSHAIR_SIZE = 7.0f;
 
     struct FaceDef {
         Vec3i n;
@@ -214,4 +218,18 @@ void renderWorld(SDL_Renderer* renderer, const World& world, const Player& playe
 
     for (const auto& entry : sortBuffer) drawFace(faceBuffer[entry.second], fovFactor, halfW, halfH, screenW, screenH);
     if (!idxBuffer.empty()) SDL_RenderGeometry(renderer, nullptr, vertBuffer.data(), static_cast<int>(vertBuffer.size()), idxBuffer.data(), static_cast<int>(idxBuffer.size()));
+}
+
+void renderGUI(SDL_Renderer *renderer, const Player &player, int width, int height, float fps, std::string_view block, const char* driver) {
+    double halfW = width * .5;
+    double halfH = height * .5;
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDebugTextFormat(renderer, 8.0, 8.0, "%.0f fps", fps);
+    SDL_RenderDebugTextFormat(renderer, (width - (strlen(driver) + 1) * 8.0), 8.0, "%s", driver);
+    SDL_RenderDebugTextFormat(renderer, (width - block.size() * 8.0) / 2.0, height - 16.0, "%.*s", static_cast<int>(block.size()), block.data());
+
+    // crosshair
+    SDL_RenderLine(renderer, halfW - CROSSHAIR_SIZE, halfH, halfW + CROSSHAIR_SIZE, halfH);
+    SDL_RenderLine(renderer, halfW, halfH - CROSSHAIR_SIZE, halfW, halfH + CROSSHAIR_SIZE);
 }
