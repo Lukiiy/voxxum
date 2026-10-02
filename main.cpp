@@ -138,10 +138,11 @@ int main(int argc, char* argv[]) {
                 }
 
                 case SDL_EVENT_WINDOW_RESIZED: {
-                    SDL_GetWindowSize(window, &w, &h);
-
+                    w = e.window.data1;
+                    h = e.window.data2;
                     halfW = w * .5;
                     halfH = h * .5;
+                    break;
                 }
             }
         }
