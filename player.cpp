@@ -58,21 +58,25 @@ void Player::updateInputs(const bool* keys, bool toJump) {
     }
 }
 
-void Player::updatePhysics(float dt, const World& world) {
+void Player::updatePhysics(float dt, const World& world) { // TODO https://minecraft.wiki/w/Player#Movement_speed
     dt = std::min(dt, .05f);
 
+    float friction = std::pow(grounded ? .546 : .8, dt * 20);
+
+    vel.x = vel.x * friction + moveInput.x * SPEED * (1 - friction);
+    vel.z = vel.z * friction + moveInput.z * SPEED * (1 - friction);
     vel.y -= GRAVITY * dt;
 
     pos.x += vel.x * dt;
     resolveCollisions(world, Axis::X);
 
-    pos.y += vel.y * dt;
+    pos.y += (vel.y + GRAVITY * dt * .5) * dt;
     resolveCollisions(world, Axis::Y);
 
     pos.z += vel.z * dt;
     resolveCollisions(world, Axis::Z);
 
-    if (pos.y < -30.0f) {
+    if (pos.y < -30) {
         pos = {16.0f, 10.0f, 16.0f};
         vel = {};
     }
