@@ -13,7 +13,6 @@ namespace {
     constexpr float REACH = 4.0f;
     constexpr float BLOCKACT_INTERVAL = .2f;
     const std::string devLol = "by Lukiiy"; // lol yayyy
-    constexpr float CROSSHAIR_SIZE = 7.0f;
 }
 
 BlockType cycleSel(BlockType current, int add) {
@@ -68,8 +67,6 @@ int main(int argc, char* argv[]) {
     auto ray = [&]() {
         return world.raycast(player.getEyePosition(), player.getForwardVector(), REACH);
     };
-
-    const std::string graphEng = driver ? driver : "what";
 
     float actTimer = 0.0f;
     Uint64 last = SDL_GetPerformanceCounter();
@@ -164,16 +161,8 @@ int main(int argc, char* argv[]) {
         double halfH = h * .5;
 
         renderWorld(renderer, world, player, w, h, target);
-
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderDebugTextFormat(renderer, 8.0, 8.0, "%.0f fps", fps);
-        SDL_RenderDebugTextFormat(renderer, (w - (graphEng.size() + 1) * 8.0), 8.0, "%s", graphEng.c_str());
-        SDL_RenderDebugTextFormat(renderer, (w - block.size() * 8.0) / 2.0, h - 16.0, "%.*s", static_cast<int>(block.size()), block.data());
+        renderGUI(renderer, player, w, h, fps, block, driver);
         SDL_RenderDebugTextFormat(renderer, (w - (devLol.size() + 1) * 8.0), h - 16.0, "%s", devLol.c_str());
-
-        // crosshair
-        SDL_RenderLine(renderer, halfW - CROSSHAIR_SIZE, halfH, halfW + CROSSHAIR_SIZE, halfH);
-        SDL_RenderLine(renderer, halfW, halfH - CROSSHAIR_SIZE, halfW, halfH + CROSSHAIR_SIZE);
 
         SDL_RenderPresent(renderer);
     }
