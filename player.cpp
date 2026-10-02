@@ -88,37 +88,52 @@ void Player::resolveCollisions(const World& world, Axis axis) {
     if (axis == Axis::Y) grounded = false;
 
     AABB box = getAABB(pos);
-    int minX = static_cast<int>(std::floor(box.min.x)), maxX = static_cast<int>(std::floor(box.max.x));
-    int minY = static_cast<int>(std::floor(box.min.y)), maxY = static_cast<int>(std::floor(box.max.y));
-    int minZ = static_cast<int>(std::floor(box.min.z)), maxZ = static_cast<int>(std::floor(box.max.z));
-    float halfW = width / 2.0f;
+    int minX = static_cast<int>(std::floor(box.min.x));
+    int maxX = static_cast<int>(std::floor(box.max.x));
+    int minY = static_cast<int>(std::floor(box.min.y));
+    int maxY = static_cast<int>(std::floor(box.max.y));
+    int minZ = static_cast<int>(std::floor(box.min.z));
+    int maxZ = static_cast<int>(std::floor(box.max.z));
+    float halfW = width / 2;
 
-    for (int x = minX; x <= maxX; ++x)
-    for (int y = minY; y <= maxY; ++y)
-    for (int z = minZ; z <= maxZ; ++z) {
-        if (!world.isSolid(x, y, z)) continue;
+    for (int x = minX; x <= maxX; ++x) {
+        for (int y = minY; y <= maxY; ++y) {
+            for (int z = minZ; z <= maxZ; ++z) {
+                if (!world.isSolid(x, y, z)) continue;
 
-        switch (axis) {
-            case Axis::X:
-                if (vel.x > 0) pos.x = x - halfW - ERRMARGIN; else if (vel.x < 0) pos.x = x + 1.0f + halfW + ERRMARGIN;
+                switch (axis) {
+                    case Axis::X:
+                        if (vel.x > 0) {
+                            pos.x = x - halfW - ERRMARGIN;
+                        } else if (vel.x < 0) {
+                            pos.x = x + 1 + halfW + ERRMARGIN;
+                        }
 
-                vel.x = 0.0f;
-                break;
-            case Axis::Y:
-                if (vel.y < 0) {
-                    pos.y = y + 1.0f;
-                    grounded = true;
-                } else if (vel.y > 0) pos.y = y - height - ERRMARGIN;
+                        vel.x = 0.0f;
+                        break;
+                    case Axis::Y:
+                        if (vel.y < 0) {
+                            pos.y = y + 1.0f;
+                            grounded = true;
+                        } else if (vel.y > 0) {
+                            pos.y = y - height - ERRMARGIN;
+                        }
 
-                vel.y = 0.0f;
-                break;
-            case Axis::Z:
-                if (vel.z > 0) pos.z = z - halfW - ERRMARGIN; else if (vel.z < 0) pos.z = z + 1.0f + halfW + ERRMARGIN;
+                        vel.y = 0.0f;
+                        break;
+                    case Axis::Z:
+                        if (vel.z > 0) {
+                            pos.z = z - halfW - ERRMARGIN;
+                        } else if (vel.z < 0) {
+                            pos.z = z + 1 + halfW + ERRMARGIN;
+                        }
 
-                vel.z = 0.0f;
-                break;
+                        vel.z = 0.0f;
+                        break;
+                }
+
+                return;
+            }
         }
-
-        return;
     }
 }
