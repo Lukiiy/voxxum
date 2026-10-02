@@ -12,7 +12,6 @@
 namespace {
     constexpr float NEAR_Z = 0.05f;
     constexpr float FOV_DEG = 70.0f;
-    constexpr float CROSSHAIR_SIZE = 8.0f;
 
     struct FaceDef {
         Vec3i n;
@@ -215,9 +214,4 @@ void renderWorld(SDL_Renderer* renderer, const World& world, const Player& playe
 
     for (const auto& entry : sortBuffer) drawFace(faceBuffer[entry.second], fovFactor, halfW, halfH, screenW, screenH);
     if (!idxBuffer.empty()) SDL_RenderGeometry(renderer, nullptr, vertBuffer.data(), static_cast<int>(vertBuffer.size()), idxBuffer.data(), static_cast<int>(idxBuffer.size()));
-
-    // crosshair
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
-    SDL_RenderLine(renderer, halfW - CROSSHAIR_SIZE, halfH, halfW + CROSSHAIR_SIZE, halfH);
-    SDL_RenderLine(renderer, halfW, halfH - CROSSHAIR_SIZE, halfW, halfH + CROSSHAIR_SIZE);
 }

@@ -13,6 +13,7 @@ namespace {
     constexpr float REACH = 4.0f;
     constexpr float BLOCKACT_INTERVAL = .2f;
     const std::string devLol = "by Lukiiy"; // lol yayyy
+    constexpr float CROSSHAIR_SIZE = 7.0f;
 }
 
 BlockType cycleSel(BlockType current, int add) {
@@ -159,6 +160,9 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 115, 184, 245, 255); // sky
         SDL_RenderClear(renderer);
 
+        double halfW = w * .5;
+        double halfH = h * .5;
+
         renderWorld(renderer, world, player, w, h, target);
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -166,6 +170,10 @@ int main(int argc, char* argv[]) {
         SDL_RenderDebugTextFormat(renderer, (w - (graphEng.size() + 1) * 8.0), 8.0, "%s", graphEng.c_str());
         SDL_RenderDebugTextFormat(renderer, (w - block.size() * 8.0) / 2.0, h - 16.0, "%.*s", static_cast<int>(block.size()), block.data());
         SDL_RenderDebugTextFormat(renderer, (w - (devLol.size() + 1) * 8.0), h - 16.0, "%s", devLol.c_str());
+
+        // crosshair
+        SDL_RenderLine(renderer, halfW - CROSSHAIR_SIZE, halfH, halfW + CROSSHAIR_SIZE, halfH);
+        SDL_RenderLine(renderer, halfW, halfH - CROSSHAIR_SIZE, halfW, halfH + CROSSHAIR_SIZE);
 
         SDL_RenderPresent(renderer);
     }
