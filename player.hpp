@@ -9,7 +9,7 @@ class World;
 class Player { // TODO https://minecraft.wiki/w/Player
 public:
     static constexpr float SPEED = 4.317f;
-    static constexpr float JUMP = 8.42f;
+    static constexpr float JUMP = 8.4f;
     static constexpr float GRAVITY = 28.0f;
 
     Vec3 pos = { 16.0f, 6.0f, 16.0f };
