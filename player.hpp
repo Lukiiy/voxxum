@@ -14,6 +14,7 @@ public:
 
     Vec3 pos = { 16.0f, 6.0f, 16.0f };
     Vec3 vel = { 0.0f, 0.0f, 0.0f };
+    Vec3 moveInput = { 0.0f, 0.0f, 0.0f };
 
     float yaw = -90.0f;
     float pitch = 0.0f;

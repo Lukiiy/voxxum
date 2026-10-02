@@ -38,27 +38,21 @@ void Player::handleMouseLook(float dx, float dy, float sensitivity) {
     pitch = std::clamp(pitch - dy * sensitivity, -89.0f, 89.0f);
 }
 
-void Player::updateInputs(const bool* keys, bool jumpPressed) {
-    float rotY = yaw * DEG2RAD;
-    Vec3 forward = { std::cos(rotY), 0.0f, std::sin(rotY) };
-    Vec3 right = getRightVector();
-    Vec3 moveDir;
+void Player::updateInputs(const bool* keys, bool toJump) {
+    const float forward = static_cast<float>(keys[SDL_SCANCODE_W] - keys[SDL_SCANCODE_S]);
+    const float sides = static_cast<float>(keys[SDL_SCANCODE_D] - keys[SDL_SCANCODE_A]);
 
-    if (keys[SDL_SCANCODE_W]) moveDir = moveDir + forward;
-    if (keys[SDL_SCANCODE_S]) moveDir = moveDir - forward;
-    if (keys[SDL_SCANCODE_D]) moveDir = moveDir + right;
-    if (keys[SDL_SCANCODE_A]) moveDir = moveDir - right;
+    float cos = std::cos(yaw * DEG2RAD);
+    float sin = std::sin(yaw * DEG2RAD);
+    float inputScale = 1 / std::max(std::hypot(forward, sides), 1.0f);
 
-    float len = std::sqrt(moveDir.x * moveDir.x + moveDir.z * moveDir.z);
-    if (len > ERRMARGIN) {
-        moveDir.x /= len;
-        moveDir.z /= len;
-    }
+    moveInput = {
+        (forward * cos - sides * sin) * inputScale,
+        0.0f,
+        (forward * sin + sides * cos) * inputScale
+    };
 
-    vel.x = moveDir.x * SPEED;
-    vel.z = moveDir.z * SPEED;
-
-    if (jumpPressed && grounded) {
+    if (toJump && grounded) {
         vel.y = JUMP;
         grounded = false;
     }
