@@ -25,7 +25,7 @@ Vec3 Player::getRightVector() const {
 }
 
 AABB Player::getAABB(Vec3 pos) const {
-    float halfW = width / 2.0f;
+    float halfW = width / 2;
 
     return AABB{
         { pos.x - halfW, pos.y, pos.z - halfW },
