@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_main.h>
 #include <iostream>
 #include <string>
@@ -84,6 +85,12 @@ int main(int argc, char* argv[]) {
         }
     };
 
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(window, &w, &h);
+    float halfW = w * .5;
+    float halfH = h * .5;
+
     while (true) {
         Uint64 now = SDL_GetPerformanceCounter();
         float dt = static_cast<float>((now - last) / freq);
@@ -129,6 +136,13 @@ int main(int argc, char* argv[]) {
 
                     break;
                 }
+
+                case SDL_EVENT_WINDOW_RESIZED: {
+                    SDL_GetWindowSize(window, &w, &h);
+
+                    halfW = w * .5;
+                    halfH = h * .5;
+                }
             }
         }
 
@@ -150,15 +164,9 @@ int main(int argc, char* argv[]) {
 
         const RaycastResult target = ray();
         const std::string_view block = getBlockDef(player.selected).id;
-        int w = 0;
-        int h = 0;
 
-        SDL_GetWindowSize(window, &w, &h);
         SDL_SetRenderDrawColor(renderer, 115, 184, 245, 255); // sky
         SDL_RenderClear(renderer);
-
-        double halfW = w * .5;
-        double halfH = h * .5;
 
         renderWorld(renderer, world, player, w, h, target);
         renderGUI(renderer, player, w, h, fps, block, driver);
