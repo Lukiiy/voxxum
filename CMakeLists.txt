@@ -49,4 +49,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL3 SDL3_image)
 
 add_executable(voxxum main.cpp world.cpp player.cpp renderer.cpp)
-target_link_libraries(voxxum PRIVATE SDL3::SDL3)
+
+add_custom_command(
+    TARGET voxxum POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/terrain.png" "$<TARGET_FILE_DIR:voxxum>/terrain.png"
+)
+
+target_link_libraries(voxxum PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
