@@ -65,7 +65,7 @@ jobs:
           cmake-version: '4.4.x'
 
       - name: config cmake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DVOXXUM_LINKRUNTIME=ON ${{ matrix.cmake_args }}
 
       - name: Build
         run: cmake --build build --config Release --parallel
