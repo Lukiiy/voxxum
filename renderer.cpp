@@ -44,7 +44,7 @@ namespace {
 
     struct RenderableFace {
         float depthSq;
-        Vec3 viewVerts[5];
+        ProjVertex viewVerts[5];
         int numVerts;
         SDL_FColor color;
     };
@@ -79,22 +79,27 @@ namespace {
         return SDL_FColor{ red + (1.0f - red) * glow, green + (1.0f - green) * glow, blue + (1.0f - blue) * glow, color.a };
     }
 
-    int clipNear(const Vec3* shape, int n, Vec3* clipped) {
+    int clipNear(const ProjVertex* shape, int n, ProjVertex* clipped) {
         int count = 0;
 
         for (int i = 0; i < n; ++i) {
-            const Vec3& vert = shape[i];
-            const Vec3& nextVert = shape[(i + 1) % n];
-            bool inside = vert.z >= NEAR_Z;
-            bool nextInside = nextVert.z >= NEAR_Z;
+            const ProjVertex& vert = shape[i];
+            const ProjVertex& nextVert = shape[(i + 1) % n];
+            bool inside = vert.pos.z >= NEAR_Z;
+            bool nextInside = nextVert.pos.z >= NEAR_Z;
 
             if (inside != nextInside) {
-                float interp = (NEAR_Z - vert.z) / (nextVert.z - vert.z);
+                float interp = (NEAR_Z - vert.pos.z) / (nextVert.pos.z - vert.pos.z);
 
                 clipped[count++] = {
-                    vert.x + interp * (nextVert.x - vert.x),
-                    vert.y + interp * (nextVert.y - vert.y),
-                    NEAR_Z
+                    {
+                        vert.pos.x + interp * (nextVert.pos.x - vert.pos.x),
+                        vert.pos.y + interp * (nextVert.pos.y - vert.pos.y),
+                        NEAR_Z
+                    }, {
+                        vert.uv.x + interp * (nextVert.uv.x - vert.uv.x),
+                        vert.uv.y + interp * (nextVert.uv.y - vert.uv.y)
+                    }
                 };
             }
 
