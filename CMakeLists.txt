@@ -4,6 +4,16 @@ project(voxxum CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(VOXXUM_LINKRUNTIME "add c/c++ runtimes static links" OFF)
+
+if(VOXXUM_LINKRUNTIME)
+    if(MSVC)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    elseif(UNIX AND NOT APPLE)
+        add_link_options(-static-libstdc++ -static-libgcc)
+    endif()
+endif()
+
 # bundle sdl3
 set(SDL_SHARED OFF CACHE BOOL "Bundle shared SDL3" FORCE)
 set(SDL_STATIC ON CACHE BOOL "Bundle SDL3" FORCE)
