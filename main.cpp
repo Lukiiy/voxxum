@@ -33,7 +33,7 @@ AABB blockAABB(Vec3i pos) {
 }
 
 int main(int argc, char* argv[]) {
-    const char* backend = "vulkan"; // preferred
+    const char* backend = "metal,vulkan,opengl,direct3d12"; // preferred
     bool vsync = true;
 
     for (int i = 1; i < argc; ++i) {
@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
         if (arg == "--v") backend = "vulkan";
         else if (arg == "--o") backend = "opengl";
         else if (arg == "--m") backend = "metal";
+        else if (arg == "--d") backend = "direct3d11";
         else if (arg == "--novsync") vsync = false;
     }
 
