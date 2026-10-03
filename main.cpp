@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_main.h>
+#include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <string>
 
@@ -95,6 +96,14 @@ int main(int argc, char* argv[]) {
     float halfW = w * .5;
     float halfH = h * .5;
 
+    SDL_Texture* atlas = IMG_LoadTexture(renderer, "terrain.png");
+
+    if (!atlas) {
+        SDL_Log("Failed to load atlas texture: %s", SDL_GetError());
+    } else {
+        SDL_SetTextureScaleMode(atlas, SDL_SCALEMODE_NEAREST);
+    }
+
     while (true) {
         Uint64 now = SDL_GetPerformanceCounter();
         float dt = static_cast<float>((now - last) / freq);
@@ -170,7 +179,7 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 115, 184, 245, 255); // sky
         SDL_RenderClear(renderer);
 
-        renderWorld(renderer, world, player, w, h, ray());
+        renderWorld(renderer, atlas, world, player, w, h, ray());
         renderGUI(renderer, player, w, h, fps, getBlockDef(player.selected).id, driver);
         SDL_RenderDebugTextFormat(renderer, (w - (devLol.size() + 1) * 8.0), h - 16.0, "%s", devLol.c_str());
 
@@ -178,6 +187,7 @@ int main(int argc, char* argv[]) {
     }
 
     quit:
+        if (atlas) SDL_DestroyTexture(atlas);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();

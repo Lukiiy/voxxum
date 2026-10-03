@@ -173,7 +173,7 @@ namespace {
     }
 }
 
-void renderWorld(SDL_Renderer* renderer, const World& world, const Player& player, int width, int height, const RaycastResult& rayTarget) {
+void renderWorld(SDL_Renderer* renderer, SDL_Texture* atlas, const World& world, const Player& player, int width, int height, const RaycastResult& rayTarget) {
     const Vec3 forward = player.getForwardVector();
     const Vec3 right = player.getRightVector();
     const ViewMatrix view = { player.getEyePosition(), right, {
