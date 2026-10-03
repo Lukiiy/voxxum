@@ -17,9 +17,13 @@ namespace {
     constexpr float FOV_DEG = 70.0f;
     constexpr float CROSSHAIR_SIZE = 7.0f;
 
+    constexpr float ATLAS_TILES = 4.0f;
+    constexpr float TILE_UV = 1.0f / ATLAS_TILES;
+
     struct FaceDef {
         Vec3i n;
         Vec3 corners[4];
+        SDL_FPoint uvs[4];
         Vec3 center;
         float shade;
     };
@@ -32,6 +36,11 @@ namespace {
         {{1, 0, 0}, {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}}, {1.0f, .5f, .5f}, .7f}, // east
         {{-1, 0, 0}, {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}}, {0.0f, .5f, .5f}, .7f}, // west
     }};
+
+    struct ProjVertex {
+        Vec3 pos;
+        SDL_FPoint uv;
+    };
 
     struct RenderableFace {
         float depthSq;
