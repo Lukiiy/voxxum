@@ -167,14 +167,11 @@ int main(int argc, char* argv[]) {
         player.updateInputs(keys, keys[SDL_SCANCODE_SPACE]);
         player.updatePhysics(dt, world);
 
-        const RaycastResult target = ray();
-        const std::string_view block = getBlockDef(player.selected).id;
-
         SDL_SetRenderDrawColor(renderer, 115, 184, 245, 255); // sky
         SDL_RenderClear(renderer);
 
-        renderWorld(renderer, world, player, w, h, target);
-        renderGUI(renderer, player, w, h, fps, block, driver);
+        renderWorld(renderer, world, player, w, h, ray());
+        renderGUI(renderer, player, w, h, fps, getBlockDef(player.selected).id, driver);
         SDL_RenderDebugTextFormat(renderer, (w - (devLol.size() + 1) * 8.0), h - 16.0, "%s", devLol.c_str());
 
         SDL_RenderPresent(renderer);
