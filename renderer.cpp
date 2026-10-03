@@ -146,7 +146,7 @@ namespace {
             if (rf.numVerts < 3) return;
         }
 
-        rf.color = getShade(def.base, face.shade, glow);
+        rf.color = getShade({1, 1, 1, 1}, face.shade, glow);
 
         faceBuffer.push_back(rf);
     }
