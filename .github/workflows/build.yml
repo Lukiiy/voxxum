@@ -37,17 +37,11 @@ jobs:
             built: 'build/Release/voxxum.exe'
             artifact_name: 'voxxum-windows-arm.exe'
 
-          - name: mac (arm)
-            os: macos-14
-            cmake_args: '-DCMAKE_OSX_ARCHITECTURES=arm64'
-            built: 'build/voxxum'
-            artifact_name: 'voxxum-macos'
-
           - name: mac
             os: macos-14
-            cmake_args: '-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13'
+            cmake_args: '-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13'
             built: 'build/voxxum'
-            artifact_name: 'voxxum-macos-x64'
+            artifact_name: 'voxxum-macos'
 
     steps:
       - name: Checkout repository
