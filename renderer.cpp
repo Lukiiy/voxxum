@@ -231,7 +231,7 @@ void renderWorld(SDL_Renderer* renderer, SDL_Texture* atlas, const World& world,
     idxBuffer.clear();
 
     for (const auto& entry : sortBuffer) drawFace(faceBuffer[entry.second], fovFactor, halfW, halfH, screenW, screenH);
-    if (!idxBuffer.empty()) SDL_RenderGeometry(renderer, nullptr, vertBuffer.data(), static_cast<int>(vertBuffer.size()), idxBuffer.data(), static_cast<int>(idxBuffer.size()));
+    if (!idxBuffer.empty()) SDL_RenderGeometry(renderer, atlas, vertBuffer.data(), static_cast<int>(vertBuffer.size()), idxBuffer.data(), static_cast<int>(idxBuffer.size()));
 }
 
 void renderGUI(SDL_Renderer *renderer, const Player &player, int width, int height, float fps, std::string_view block, const char* driver) {
