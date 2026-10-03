@@ -121,16 +121,28 @@ namespace {
             view.eye.z - (z + face.center.z)
         };
 
+        TileCoord tileCoord;
+
+        if (faceIdx == 0) {
+            tileCoord = def.base.top;
+        } else if (faceIdx == 1) {
+            tileCoord = def.base.bottom;
+        } else {
+            tileCoord = def.base.side;
+        }
+
         if (face.n.x * toCam.x + face.n.y * toCam.y + face.n.z * toCam.z <= 0.0f) return;
 
         const Vec3 origin = { static_cast<float>(x), static_cast<float>(y), static_cast<float>(z) };
-        Vec3 viewVerts[4];
+        ProjVertex viewVerts[4];
         bool allIn = true;
 
         for (int i = 0; i < 4; ++i) {
-            viewVerts[i] = view.transform(origin + face.corners[i]);
+            viewVerts[i].pos = view.transform(origin + face.corners[i]);
+            viewVerts[i].uv.x = (tileCoord.x + face.uvs[i].x) * TILE_UV;
+            viewVerts[i].uv.y = (tileCoord.y + face.uvs[i].y) * TILE_UV;
 
-            if (viewVerts[i].z < NEAR_Z) allIn = false;
+            if (viewVerts[i].pos.z < NEAR_Z) allIn = false;
         }
 
         RenderableFace rf;
@@ -159,12 +171,12 @@ namespace {
         float maxY = -INF;
 
         for (int i = 0; i < rf.numVerts; ++i) {
-            float perspScale = fovFactor / rf.viewVerts[i].z;
-            float perspX = halfW + rf.viewVerts[i].x * perspScale;
-            float perspY = halfH - rf.viewVerts[i].y * perspScale;
+            float perspScale = fovFactor / rf.viewVerts[i].pos.z;
+            float perspX = halfW + rf.viewVerts[i].pos.x * perspScale;
+            float perspY = halfH - rf.viewVerts[i].pos.y * perspScale;
 
             projected[i] = SDL_Vertex{
-                { perspX, perspY }, rf.color, { 0.0f, 0.0f }
+                { perspX, perspY }, rf.color, rf.viewVerts[i].uv
             };
 
             minX = std::min(minX, perspX);
