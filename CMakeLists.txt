@@ -34,5 +34,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL3)
 
-add_executable(voxxum main.cpp world.cpp player.cpp renderer.cpp)
+add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
 target_link_libraries(voxxum PRIVATE SDL3::SDL3)
