@@ -32,7 +32,16 @@ FetchContent_Declare(
     GIT_SHALLOW TRUE
     FIND_PACKAGE_ARGS NAMES SDL3
 )
-FetchContent_MakeAvailable(SDL3)
+FetchContent_Declare(
+    zstd
+    GIT_REPOSITORY https://github.com/facebook/zstd.git
+    GIT_TAG v1.5.7
+    GIT_SHALLOW TRUE
+    SOURCE_SUBDIR build/cmake
+    FIND_PACKAGE_ARGS NAMES zstd
+)
+
+FetchContent_MakeAvailable(SDL3 zstd)
 
 add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
-target_link_libraries(voxxum PRIVATE SDL3::SDL3)
+target_link_libraries(voxxum PRIVATE SDL3::SDL3 zstd::libzstd_static)
