@@ -8,3 +8,5 @@ Most of its rendering code is based off of [Base3D](https://github.com/Lukiiy/Ba
 These are most likely downloaded when you try to build with CMakeLists being present.
 
 * [SDL3](https://www.libsdl.org/)
+* [zstd](https://github.com/facebook/zstd)
+* [FastNoiseLite](https://github.com/Auburn/FastNoiseLite)
