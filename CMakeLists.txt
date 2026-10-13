@@ -40,8 +40,16 @@ FetchContent_Declare(
     SOURCE_SUBDIR build/cmake
     FIND_PACKAGE_ARGS NAMES zstd
 )
+FetchContent_Declare(
+    FastNoiseLite
+    GIT_REPOSITORY https://github.com/Auburn/FastNoiseLite.git
+    GIT_TAG v1.1.1
+    GIT_SHALLOW TRUE
+)
 
-FetchContent_MakeAvailable(SDL3 zstd)
+FetchContent_MakeAvailable(SDL3 FastNoiseLite)
+find_library(ZSTD_LIB NAMES zstd libzstd REQUIRED)
 
 add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
-target_link_libraries(voxxum PRIVATE SDL3::SDL3 zstd::libzstd_static)
+target_include_directories(voxxum PRIVATE ${fastnoiselite_SOURCE_DIR}/Cpp)
+target_link_libraries(voxxum PRIVATE SDL3::SDL3 ${ZSTD_LIB})
