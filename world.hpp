@@ -10,20 +10,9 @@
 
 class World {
 public:
-    static constexpr int SIZE_X = 32;
-    static constexpr int SIZE_Y = 16;
-    static constexpr int SIZE_Z = 32;
+    World(std::string saveDir = "");
 
-    World();
-
-    bool inBounds(int x, int y, int z) const {
-        return x >= 0 && x < SIZE_X && y >= 0 && y < SIZE_Y && z >= 0 && z < SIZE_Z;
-    }
-
-    BlockType getBlock(int x, int y, int z) const {
-        return inBounds(x, y, z) ? blocks[x][y][z] : BlockType::AIR;
-    }
-
+    BlockType getBlock(int x, int y, int z);
     bool setBlock(int x, int y, int z, BlockType type);
 
     bool isSolid(int x, int y, int z) const {
@@ -34,7 +23,14 @@ public:
         return getBlockDef(getBlock(x, y, z)).isTransparent;
     }
 
-    RaycastResult raycast(Vec3 origin, Vec3 dir, float maxDist) const;
+    RaycastResult raycast(Vec3 origin, Vec3 dir, float maxDist);
+    ChunkColumn& getOrLoadColumn(int colX, int colZ);
+
+    const std::unordered_map<uint64_t, ChunkColumn>& getLoadedColumns() const {
+        return loadedColumns;
+    }
+
+    void saveAll();
 
 private:
     std::string saveDir;
