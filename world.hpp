@@ -15,11 +15,11 @@ public:
     BlockType getBlock(int x, int y, int z);
     bool setBlock(int x, int y, int z, BlockType type);
 
-    bool isSolid(int x, int y, int z) const {
+    bool isSolid(int x, int y, int z) {
         return getBlockDef(getBlock(x, y, z)).isSolid;
     }
 
-    bool isTransparent(int x, int y, int z) const {
+    bool isTransparent(int x, int y, int z) {
         return getBlockDef(getBlock(x, y, z)).isTransparent;
     }
 
