@@ -4,6 +4,7 @@
 #include "column.hpp"
 #include "mathutils.hpp"
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -22,6 +23,9 @@ public:
     bool isTransparent(int x, int y, int z) {
         return getBlockDef(getBlock(x, y, z)).isTransparent;
     }
+
+    const ChunkColumn* findColumn(int colX, int colZ) const;
+    std::optional<BlockType> peekBlock(int x, int y, int z) const;
 
     RaycastResult raycast(Vec3 origin, Vec3 dir, float maxDist);
     ChunkColumn& getOrLoadColumn(int colX, int colZ);
