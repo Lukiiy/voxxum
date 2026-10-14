@@ -1,22 +1,44 @@
 #include "world.hpp"
+#include "region.hpp"
+#include "terrainGen.hpp"
 #include <cmath>
+#include <unordered_set>
 
-World::World() {
-    for (int x = 0; x < SIZE_X; ++x) { // terrain
-        for (int z = 0; z < SIZE_Z; ++z) {
-            blocks[x][0][z] = BlockType::STONE;
-            blocks[x][1][z] = BlockType::DIRT;
-            blocks[x][2][z] = BlockType::DIRT;
-            blocks[x][3][z] = BlockType::GRASS;
-        }
-    }
+World::World(std::string saveDir) : saveDir(std::move(saveDir)) {
+    std::filesystem::create_directories(saveDir + "/region");
+}
+
+ChunkColumn& World::getOrLoadColumn(int colX, int colZ) {
+    uint64_t key = getColumnKey(colX, colZ);
+    auto it = loadedColumns.find(key);
+
+    if (it != loadedColumns.end()) return it->second;
+
+    ChunkColumn col;
+    col.x = colX;
+    col.z = colZ;
+
+    bool loaded = RegionFile::loadColumn(saveDir + "/region", colX, colZ, col);
+    if (!loaded) TerrainGen::generateColumn(col, colX, colZ);
+
+    auto [insertedIt, success] = loadedColumns.emplace(key, std::move(col));
+    return insertedIt->second;
+}
+
+BlockType World::getBlock(int x, int y, int z) {
+    ChunkColumn& col = getOrLoadColumn(x >> 4, z >> 4);
+
+    return col.getBlock(x & 15, y, z & 15);
 }
 
 bool World::setBlock(int x, int y, int z, BlockType type) {
-    if (!inBounds(x, y, z)) return false;
+    int colX = x >> 4;
+    int colZ = z >> 4;
+    ChunkColumn& col = getOrLoadColumn(colX, colZ);
 
-    blocks[x][y][z] = type;
+    col.setBlock(x & 15, y, z & 15, type);
 
+    dirtySect.insert(getColumnKey(colX, colZ));
     return true;
 }
 
