@@ -58,7 +58,7 @@ void Player::updateInputs(const bool* keys, bool toJump) {
     }
 }
 
-void Player::updatePhysics(float dt, const World& world) { // TODO https://minecraft.wiki/w/Player#Movement_speed
+void Player::updatePhysics(float dt, World& world) { // TODO https://minecraft.wiki/w/Player#Movement_speed
     dt = std::min(dt, .05f);
 
     float friction = std::pow(grounded ? .546 : .8, dt * 20);
@@ -82,7 +82,7 @@ void Player::updatePhysics(float dt, const World& world) { // TODO https://minec
     }
 }
 
-void Player::resolveCollisions(const World& world, Axis axis) {
+void Player::resolveCollisions(World& world, Axis axis) {
     if (axis == Axis::Y) grounded = false;
 
     AABB box = getAABB(pos);

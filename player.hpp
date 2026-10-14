@@ -35,8 +35,8 @@ public:
 
     void handleMouseLook(float dx, float dy, float sensitivity = .15f);
     void updateInputs(const bool* keys, bool jumpPressed);
-    void updatePhysics(float dt, const World& world);
+    void updatePhysics(float dt, World& world);
 
 private:
-    void resolveCollisions(const World& world, Axis axis);
+    void resolveCollisions(World& world, Axis axis);
 };
