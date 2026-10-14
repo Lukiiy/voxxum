@@ -1,7 +1,12 @@
 #pragma once
 
 #include "block.hpp"
+#include "column.hpp"
 #include "mathutils.hpp"
+#include <cstdint>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 
 class World {
 public:
@@ -32,5 +37,11 @@ public:
     RaycastResult raycast(Vec3 origin, Vec3 dir, float maxDist) const;
 
 private:
-    BlockType blocks[SIZE_X][SIZE_Y][SIZE_Z] {};
+    std::string saveDir;
+    std::unordered_map<uint64_t, ChunkColumn> loadedColumns;
+    std::unordered_set<uint64_t> dirtySect;
+
+    inline uint64_t getColumnKey(int32_t x, int32_t z) const {
+        return (static_cast<uint64_t>(static_cast<uint32_t>(x)) << 32) | static_cast<uint32_t>(z);
+    }
 };
