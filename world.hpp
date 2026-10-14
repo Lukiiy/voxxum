@@ -10,7 +10,7 @@
 
 class World {
 public:
-    World(std::string saveDir = "");
+    World(std::string path);
 
     BlockType getBlock(int x, int y, int z);
     bool setBlock(int x, int y, int z, BlockType type);

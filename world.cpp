@@ -1,11 +1,15 @@
 #include "world.hpp"
 #include "region.hpp"
 #include "terrainGen.hpp"
+#include <SDL3/SDL_log.h>
 #include <cmath>
 #include <unordered_set>
 
-World::World(std::string saveDir) : saveDir(std::move(saveDir)) {
-    std::filesystem::create_directories(saveDir + "/region");
+World::World(std::string path) : saveDir(std::move(path)) {
+    std::error_code err;
+    std::filesystem::create_directories(std::filesystem::path(saveDir) / "region", err);
+
+    if (err) SDL_Log("Cannot create save dir %s: %s", saveDir.c_str(), err.message().c_str());
 }
 
 ChunkColumn& World::getOrLoadColumn(int colX, int colZ) {
