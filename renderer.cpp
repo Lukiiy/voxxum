@@ -186,7 +186,7 @@ void renderWorld(SDL_Renderer* renderer, const World& world, const Player& playe
     const float screenH = static_cast<float>(height);
     const float halfW = screenW * .5f;
     const float halfH = screenH * .5f;
-    const float fovFactor = halfH / std::tan(FOV_DEG * .5f * (PI / 180.0f));
+    const float fovFactor = halfH / std::tan(FOV_DEG * .5f * DEG2RAD);
     const float alpha = (std::sin(static_cast<float>(SDL_GetTicks()) * .005f) * .5f + .5f) * .35f + .1f;
 
     faceBuffer.clear();
