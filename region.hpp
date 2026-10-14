@@ -46,7 +46,10 @@ public:
     }
 
     static bool saveColumn(const std::string& directory, const ChunkColumn& column) {
-        std::filesystem::create_directories(directory);
+        std::error_code err;
+        std::filesystem::create_directories(directory, err);
+        if (err) return false;
+
         std::string path = getPath(directory, regionCoord(column.x), regionCoord(column.z));
 
         if (!std::filesystem::exists(path)) {
