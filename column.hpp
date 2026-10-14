@@ -10,22 +10,27 @@ class ChunkColumn {
 public:
     int x = 0;
     int z = 0;
+    bool dirty = false;
 
     std::unordered_map<int, SquareChunk> sections;
 
-    BlockType getBlock(int localX, int y, int localZ) const {
-        int chunkY = y >> 4;
+    BlockType getBlock(int x, int y, int z) const {
+        auto it = sections.find(y >> 4);
+        if (it == sections.end()) return BlockType::AIR;
 
-        auto it = sections.find(chunkY);
-        if (it != sections.end()) return it->second.getBlock(localX, y & 15, localZ);
-
-        return BlockType::AIR;
+        return it->second.getBlock(x, y & 15, z);
     }
 
-    void setBlock(int localX, int y, int localZ, BlockType type) {
-        int chunkY = y >> 4;
+    void setBlock(int x, int y, int z, BlockType type) {
+        auto it = sections.find(y >> 4);
+        if (it == sections.end()) {
+            if (type == BlockType::AIR) return;
 
-        sections[chunkY].setBlock(localX, y & 15, localZ, type);
+            it = sections.try_emplace(y >> 4).first;
+        }
+
+        it->second.setBlock(x, y & 15, z, type);
+        dirty = true;
     }
 
     std::vector<uint8_t> serialize() const {
