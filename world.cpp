@@ -133,3 +133,19 @@ RaycastResult World::raycast(Vec3 source, Vec3 dir, float max) {
 
     return result;
 }
+
+void World::saveAll() {
+    for (auto it = dirtySect.begin(); it != dirtySect.end();) {
+        auto column = loadedColumns.find(*it);
+
+        if (column == loadedColumns.end()) {
+            it = dirtySect.erase(it);
+
+            continue;
+        }
+
+        if (RegionFile::saveColumn(std::filesystem::path(saveDir) / "region", column->second)) {
+            it = dirtySect.erase(it);
+        } else ++it;
+    }
+}
