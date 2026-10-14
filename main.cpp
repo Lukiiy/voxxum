@@ -5,6 +5,7 @@
 #include <string>
 
 #include "block.hpp"
+#include "frametime.hpp"
 #include "mathutils.hpp"
 #include "player.hpp"
 #include "world.hpp"
@@ -74,9 +75,7 @@ int main(int argc, char* argv[]) {
     };
 
     float actTimer = 0.0f;
-    Uint64 last = SDL_GetPerformanceCounter();
-    const double freq = static_cast<double>(SDL_GetPerformanceFrequency());
-    double fps = 0.0f;
+    FrameTime fpsTime = FrameTime();
 
     auto performBlockAction = [&](bool isLeft) {
         const RaycastResult result = ray();
@@ -96,12 +95,7 @@ int main(int argc, char* argv[]) {
     float halfH = h * .5;
 
     while (true) {
-        Uint64 now = SDL_GetPerformanceCounter();
-        float dt = static_cast<float>((now - last) / freq);
-
-        last = now;
-        if (dt > 0.0f) fps += (1.0f / dt - fps) * .1f;
-
+        const float dt = fpsTime.tick();
         actTimer -= dt;
 
         SDL_Event e;
@@ -171,7 +165,7 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         renderWorld(renderer, world, player, w, h, ray());
-        renderGUI(renderer, player, w, h, fps, getBlockDef(player.selected).id, driver);
+        renderGUI(renderer, player, w, h, fpsTime.getFps(), getBlockDef(player.selected).id, driver);
         SDL_RenderDebugTextFormat(renderer, (w - (devLol.size() + 1) * 8.0), h - 16.0, "%s", devLol.c_str());
 
         SDL_RenderPresent(renderer);
