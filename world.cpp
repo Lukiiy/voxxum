@@ -41,12 +41,25 @@ bool World::setBlock(int x, int y, int z, BlockType type) {
     ChunkColumn& col = getOrLoadColumn(colX, colZ);
 
     col.setBlock(x & 15, y, z & 15, type);
-
     dirtySect.insert(getColumnKey(colX, colZ));
+
     return true;
 }
 
-RaycastResult World::raycast(Vec3 source, Vec3 dir, float max) const {
+const ChunkColumn* World::findColumn(int colX, int colZ) const {
+    auto it = loadedColumns.find(getColumnKey(colX, colZ));
+
+    return it == loadedColumns.end() ? nullptr : &it->second;
+}
+
+std::optional<BlockType> World::peekBlock(int x, int y, int z) const {
+    const ChunkColumn* column = findColumn(x >> 4, z >> 4);
+    if (!column) return std::nullopt;
+
+    return column->getBlock(x & 15, y, z & 15);
+}
+
+RaycastResult World::raycast(Vec3 source, Vec3 dir, float max) {
     RaycastResult result;
 
     Vec3i pos = {
