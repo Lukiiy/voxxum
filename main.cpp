@@ -67,8 +67,12 @@ int main(int argc, char* argv[]) {
     SDL_SetRenderVSync(renderer, vsync ? 1 : 0);
     SDL_SetWindowRelativeMouseMode(window, true);
 
+    char* workDir = SDL_GetPrefPath("lukiiy", "voxxum");
+    std::string saveDir = std::string(workDir) + "test";
+    SDL_free(workDir);
+
     const char* driver = SDL_GetRendererName(renderer);
-    World world = World();
+    World world = World(saveDir);
     Player player = Player();
     auto ray = [&]() {
         return world.raycast(player.getEyePosition(), player.getForwardVector(), REACH);
