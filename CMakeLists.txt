@@ -53,8 +53,14 @@ FetchContent_Declare(
     GIT_TAG master
     GIT_SHALLOW TRUE
 )
+FetchContent_Declare(
+    sokol_gp
+    GIT_REPOSITORY https://github.com/edubart/sokol_gp.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+)
 
-FetchContent_MakeAvailable(SDL3 FastNoiseLite sokol)
+FetchContent_MakeAvailable(SDL3 FastNoiseLite sokol sokol_gp)
 find_library(ZSTD_LIB NAMES zstd libzstd REQUIRED)
 
 add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
@@ -62,6 +68,7 @@ add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
 target_include_directories(voxxum PRIVATE
     ${fastnoiselite_SOURCE_DIR}/Cpp
     ${sokol_SOURCE_DIR}
+    ${sokol_gp_SOURCE_DIR}
 )
 
 target_link_libraries(voxxum PRIVATE SDL3::SDL3 ${ZSTD_LIB})
