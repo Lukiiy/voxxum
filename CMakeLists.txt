@@ -46,10 +46,21 @@ FetchContent_Declare(
     GIT_TAG v1.1.1
     GIT_SHALLOW TRUE
 )
+FetchContent_Declare(
+    sokol
+    GIT_REPOSITORY https://github.com/floooh/sokol.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+)
 
-FetchContent_MakeAvailable(SDL3 FastNoiseLite)
+FetchContent_MakeAvailable(SDL3 FastNoiseLite sokol)
 find_library(ZSTD_LIB NAMES zstd libzstd REQUIRED)
 
 add_executable(voxxum WIN32 main.cpp world.cpp player.cpp renderer.cpp)
-target_include_directories(voxxum PRIVATE ${fastnoiselite_SOURCE_DIR}/Cpp)
+
+target_include_directories(voxxum PRIVATE
+    ${fastnoiselite_SOURCE_DIR}/Cpp
+    ${sokol_SOURCE_DIR}
+)
+
 target_link_libraries(voxxum PRIVATE SDL3::SDL3 ${ZSTD_LIB})
