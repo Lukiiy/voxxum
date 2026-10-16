@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(VOXXUM_LINKRUNTIME "add c/c++ runtimes static links" OFF)
+option(VOXXUM_USE_OPENGL "use OpenGL backend" OFF)
 
 if(VOXXUM_LINKRUNTIME)
     if(MSVC)
@@ -64,3 +65,9 @@ target_include_directories(voxxum PRIVATE
 )
 
 target_link_libraries(voxxum PRIVATE SDL3::SDL3 ${ZSTD_LIB})
+
+if(VOXXUM_USE_OPENGL)
+    target_compile_definitions(voxxum PRIVATE SOKOL_GLCORE)
+else()
+    target_compile_definitions(voxxum PRIVATE SOKOL_VULKAN)
+endif()
