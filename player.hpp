@@ -12,7 +12,7 @@ public:
     static constexpr float JUMP = 8.4f;
     static constexpr float GRAVITY = 28.0f;
 
-    Vec3 pos = { 16.0f, 6.0f, 16.0f };
+    Vec3 pos = { 16.0f, 128.0f, 16.0f };
     Vec3 vel = { 0.0f, 0.0f, 0.0f };
     Vec3 moveInput = { 0.0f, 0.0f, 0.0f };
 
