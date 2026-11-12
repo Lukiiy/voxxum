@@ -71,7 +71,12 @@ target_include_directories(voxxum PRIVATE
     ${sokol_gp_SOURCE_DIR}
 )
 
-target_link_libraries(voxxum PRIVATE SDL3::SDL3 ${ZSTD_LIB})
+target_link_libraries(voxxum PRIVATE
+    SDL3::SDL3
+    ${ZSTD_LIB}
+    pthread
+    dl
+)
 
 if(VOXXUM_USE_OPENGL)
     target_compile_definitions(voxxum PRIVATE SOKOL_GLCORE)
